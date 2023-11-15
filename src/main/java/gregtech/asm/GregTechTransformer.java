@@ -6,7 +6,6 @@ import gregtech.asm.util.TargetClassVisitor;
 import gregtech.asm.visitors.*;
 
 import net.minecraft.launchwrapper.IClassTransformer;
-import net.minecraft.launchwrapper.Launch;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.ModContainer;
 
@@ -82,7 +81,7 @@ public class GregTechTransformer implements IClassTransformer, Opcodes {
                         EntityRendererVisitor::new), 0);
                 return classWriter.toByteArray();
             }
-            case BlockVisitor.TARGET_CLASS_NAME: {
+            /*case BlockVisitor.TARGET_CLASS_NAME: {
                 try {
                     // must use Class#forName because CTM is client side only, and there is no other way to check
                     Class.forName("team.chisel.ctm.CTM", false, Launch.classLoader);
@@ -95,7 +94,7 @@ public class GregTechTransformer implements IClassTransformer, Opcodes {
                     return classWriter.toByteArray();
                 }
                 break;
-            }
+            }*/
             /*case WorldVisitor.TARGET_CLASS_NAME: {
                 ClassReader classReader = new ClassReader(basicClass);
                 ClassWriter classWriter = new ClassWriter(ClassWriter.COMPUTE_FRAMES | ClassWriter.COMPUTE_MAXS);
