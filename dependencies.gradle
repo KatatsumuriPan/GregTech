@@ -44,6 +44,7 @@ dependencies {
     compileOnlyApi rfg.deobf("curse.maven:forestry-59751:2684780") // Forestry 5.8.2.387
     compileOnlyApi rfg.deobf("curse.maven:chisel-235279:2915375") // Chisel 1.0.2.45
     compileOnlyApi rfg.deobf("curse.maven:littletiles-257818:4750222") // LittleTiles 1.5.82-1.12.2
+    compileOnlyApi rfg.deobf("curse.maven:creativecore-257814:4722163") // Creative Core 1.10.71
 
 
     // Mods with Soft compat but which have no need to be in code, such as isModLoaded() checks and getModItem() recipes.
