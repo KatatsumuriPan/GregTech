@@ -15,6 +15,7 @@ import gregtech.api.gui.widgets.ImageWidget;
 import gregtech.api.gui.widgets.TextFieldWidget2;
 import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.metatileentity.interfaces.IGregTechTileEntity;
+import gregtech.api.mui.GTGuis;
 import gregtech.api.util.GTUtility;
 import gregtech.client.renderer.texture.Textures;
 import gregtech.client.utils.TooltipHelper;
@@ -35,6 +36,18 @@ import codechicken.lib.render.pipeline.ColourMultiplier;
 import codechicken.lib.render.pipeline.IVertexOperation;
 import codechicken.lib.vec.Cuboid6;
 import codechicken.lib.vec.Matrix4;
+import com.cleanroommc.modularui.api.drawable.IKey;
+import com.cleanroommc.modularui.factory.PosGuiData;
+import com.cleanroommc.modularui.screen.ModularPanel;
+import com.cleanroommc.modularui.value.sync.BooleanSyncValue;
+import com.cleanroommc.modularui.value.sync.GuiSyncManager;
+import com.cleanroommc.modularui.value.sync.IntSyncValue;
+import com.cleanroommc.modularui.value.sync.StringSyncValue;
+import com.cleanroommc.modularui.widget.sizer.Area;
+import com.cleanroommc.modularui.widgets.ButtonWidget;
+import com.cleanroommc.modularui.widgets.layout.Column;
+import com.cleanroommc.modularui.widgets.layout.Row;
+import com.cleanroommc.modularui.widgets.textfield.TextFieldWidget;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.NotNull;
@@ -43,8 +56,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.function.Function;
 
-import static gregtech.api.GTValues.MAX;
-import static gregtech.api.GTValues.V;
+import static gregtech.api.GTValues.*;
 import static gregtech.api.capability.GregtechDataCodes.UPDATE_ACTIVE;
 import static gregtech.api.capability.GregtechDataCodes.UPDATE_IO_SPEED;
 
@@ -98,6 +110,76 @@ public class MetaTileEntityCreativeEnergy extends MetaTileEntity implements ILas
         } else {
             return super.getCapability(capability, side);
         }
+    }
+
+    @Override
+    public boolean usesMui2() {
+        return true;
+    }
+
+    @Override
+    public ModularPanel buildUI(PosGuiData guiData, GuiSyncManager guiSyncManager) {
+        int backgroundWidth = 176;
+        int backgroundHeight = 166;
+
+        BooleanSyncValue isActiveValue = new BooleanSyncValue(() -> active, val -> active = val);
+        guiSyncManager.syncValue("active_state", isActiveValue);
+        BooleanSyncValue sourceSinkValue = new BooleanSyncValue(() -> source, val -> source = val);
+        guiSyncManager.syncValue("source_sink", sourceSinkValue);
+        IntSyncValue voltageTierValue = new IntSyncValue(() -> setTier, val -> setTier = val);
+        guiSyncManager.syncValue("voltage_name_sync", voltageTierValue);
+
+        StringSyncValue voltageString = new StringSyncValue(() -> String.valueOf(V[setTier]),
+                val -> voltage = Long.parseLong(val));
+
+        // Set the voltage bar like the current Amperage bar
+        return GTGuis.createPanel(this, backgroundWidth, backgroundHeight)
+
+                /*.child(new com.cleanroommc.modularui.widgets.CycleButtonWidget()
+                        .pos(7, 7).width(30).height(20)
+                        .length(GTValues.VNF.length)
+                                .value(new IntValue.Dynamic(voltageNameValue::getIntValue, voltageNameValue.setValue())))*/
+                .child(new Column()
+                        .widthRel(1.0F).margin(2, 2).top(22).coverChildrenHeight()
+                        .child(IKey.dynamic(() -> "Voltage Tier: " + VNF[voltageTierValue.getIntValue()]).asWidget()
+                                .margin(2))
+                        .child(new Row()
+                                .pos(0, 12).height(16)
+                                .child(new TextFieldWidget().right(32)
+                                        .width(114).marginLeft(2).marginRight(2)
+                                        .setMaxLength(19).setValidator(getTextFieldValidator())
+                                        .setPattern(TextFieldWidget2.NATURAL_NUMS).value(voltageString))
+                                .child(new ButtonWidget<>().leftRel(1 - ((float) (116 + 32 + 18) / backgroundWidth))
+                                        .overlay(IKey.str("-"))
+                                        .addTooltipLine("Decrement Voltage Tier").excludeTooltipArea(
+                                                new Area(32, 93, 114, 16))
+                                        .onMouseTapped(mb -> {
+                                            int tier = voltageTierValue.getIntValue();
+                                            if (--tier < 0) {
+                                                tier = 14;
+                                            }
+                                            voltageTierValue.setIntValue(tier, true, true);
+                                            return true;
+
+                                        }))
+                                .child(new ButtonWidget<>().rightRel(((float) (118 + 32 + 18) / backgroundWidth))
+                                        .overlay(IKey.str("+"))
+                                        .addTooltipLine("Increment Voltage Tier")
+                                        .onMouseTapped(mb -> {
+                                            int tier = voltageTierValue.getIntValue();
+                                            if (++tier > 14) {
+                                                tier = 0;
+                                            }
+
+                                            voltageTierValue.setIntValue(tier, true, true);
+                                            return true;
+
+                                        }))
+                        ));
+
+        //.draw(););
+        //.listenGuiAction())
+
     }
 
     @Override
