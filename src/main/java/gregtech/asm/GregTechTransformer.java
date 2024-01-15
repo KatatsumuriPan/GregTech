@@ -1,15 +1,7 @@
 package gregtech.asm;
 
-import gregtech.asm.util.ObfMapping;
-import gregtech.asm.util.TargetClassVisitor;
-import gregtech.asm.visitors.EnchantmentCanApplyVisitor;
-import gregtech.asm.visitors.JEIVisitor;
-import gregtech.asm.visitors.LittleTilesVisitor;
-
 import net.minecraft.launchwrapper.IClassTransformer;
 
-import org.objectweb.asm.ClassReader;
-import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Opcodes;
 
 public class GregTechTransformer implements IClassTransformer, Opcodes {
@@ -18,12 +10,14 @@ public class GregTechTransformer implements IClassTransformer, Opcodes {
     public byte[] transform(String name, String transformedName, byte[] basicClass) {
         String internalName = transformedName.replace('.', '/');
         switch (internalName) {
-            case JEIVisitor.TARGET_CLASS_NAME: {
-                ClassReader classReader = new ClassReader(basicClass);
-                ClassWriter classWriter = new ClassWriter(0);
-                classReader.accept(new TargetClassVisitor(classWriter, JEIVisitor.TARGET_METHOD, JEIVisitor::new), 0);
-                return classWriter.toByteArray();
-            }
+            /*
+             * case JEIVisitor.TARGET_CLASS_NAME: {
+             * ClassReader classReader = new ClassReader(basicClass);
+             * ClassWriter classWriter = new ClassWriter(0);
+             * classReader.accept(new TargetClassVisitor(classWriter, JEIVisitor.TARGET_METHOD, JEIVisitor::new), 0);
+             * return classWriter.toByteArray();
+             * }
+             */
             /*
              * case ConcretePowderVisitor.TARGET_CLASS_NAME:
              * if (ConfigHolder.recipes.disableConcreteInWorld) {
@@ -133,14 +127,16 @@ public class GregTechTransformer implements IClassTransformer, Opcodes {
              * return classWriter.toByteArray();
              * }
              */
-            case LittleTilesVisitor.TARGET_CLASS_NAME: {
-                ClassReader classReader = new ClassReader(basicClass);
-                ClassWriter classWriter = new ClassWriter(ClassWriter.COMPUTE_FRAMES | ClassWriter.COMPUTE_MAXS);
-                classReader.accept(
-                        new TargetClassVisitor(classWriter, LittleTilesVisitor.TARGET_METHOD, LittleTilesVisitor::new),
-                        0);
-                return classWriter.toByteArray();
-            }
+            /*
+             * case LittleTilesVisitor.TARGET_CLASS_NAME: {
+             * ClassReader classReader = new ClassReader(basicClass);
+             * ClassWriter classWriter = new ClassWriter(ClassWriter.COMPUTE_FRAMES | ClassWriter.COMPUTE_MAXS);
+             * classReader.accept(
+             * new TargetClassVisitor(classWriter, LittleTilesVisitor.TARGET_METHOD, LittleTilesVisitor::new),
+             * 0);
+             * return classWriter.toByteArray();
+             * }
+             */
             /*
              * case CCLVisitor.TARGET_CLASS_NAME: {
              * ClassReader classReader = new ClassReader(basicClass);
@@ -229,14 +225,16 @@ public class GregTechTransformer implements IClassTransformer, Opcodes {
              * }
              */
         }
-        if (EnchantmentCanApplyVisitor.CLASS_TO_MAPPING_MAP.containsKey(internalName)) {
-            ObfMapping methodMapping = EnchantmentCanApplyVisitor.CLASS_TO_MAPPING_MAP.get(internalName);
-            ClassReader classReader = new ClassReader(basicClass);
-            ClassWriter classWriter = new ClassWriter(ClassWriter.COMPUTE_FRAMES | ClassWriter.COMPUTE_MAXS);
-            classReader.accept(new TargetClassVisitor(classWriter, methodMapping,
-                    mv -> new EnchantmentCanApplyVisitor(mv, methodMapping)), ClassReader.EXPAND_FRAMES);
-            return classWriter.toByteArray();
-        }
+        /*
+         * if (EnchantmentCanApplyVisitor.CLASS_TO_MAPPING_MAP.containsKey(internalName)) {
+         * ObfMapping methodMapping = EnchantmentCanApplyVisitor.CLASS_TO_MAPPING_MAP.get(internalName);
+         * ClassReader classReader = new ClassReader(basicClass);
+         * ClassWriter classWriter = new ClassWriter(ClassWriter.COMPUTE_FRAMES | ClassWriter.COMPUTE_MAXS);
+         * classReader.accept(new TargetClassVisitor(classWriter, methodMapping,
+         * mv -> new EnchantmentCanApplyVisitor(mv, methodMapping)), ClassReader.EXPAND_FRAMES);
+         * return classWriter.toByteArray();
+         * }
+         */
         return basicClass;
     }
 }
