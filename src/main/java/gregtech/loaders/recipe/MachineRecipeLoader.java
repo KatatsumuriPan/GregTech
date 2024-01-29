@@ -16,11 +16,17 @@ import gregtech.api.unification.ore.OrePrefix;
 import gregtech.api.unification.stack.MaterialStack;
 import gregtech.api.unification.stack.UnificationEntry;
 import gregtech.common.ConfigHolder;
-import gregtech.common.blocks.*;
+import gregtech.common.blocks.BlockAsphalt;
+import gregtech.common.blocks.BlockCleanroomCasing;
+import gregtech.common.blocks.BlockFusionCasing;
+import gregtech.common.blocks.BlockGlassCasing;
+import gregtech.common.blocks.BlockLamp;
 import gregtech.common.blocks.BlockMachineCasing.MachineCasingType;
 import gregtech.common.blocks.BlockMetalCasing.MetalCasingType;
 import gregtech.common.blocks.BlockTurbineCasing.TurbineCasingType;
 import gregtech.common.blocks.BlockWireCoil.CoilType;
+import gregtech.common.blocks.MetaBlocks;
+import gregtech.common.blocks.StoneVariantBlock;
 import gregtech.common.blocks.StoneVariantBlock.StoneVariant;
 import gregtech.common.items.ArmorItems;
 import gregtech.common.items.MetaItems;
@@ -1406,11 +1412,11 @@ public class MachineRecipeLoader {
         ModHandler.addShapelessNBTClearingRecipe("data_module_nbt", TOOL_DATA_MODULE.getStackForm(),
                 TOOL_DATA_MODULE.getStackForm());
 
-        //Jetpacks
-        ModHandler.addShapelessRecipe("fueled_jetpack_nbt", ArmorItems.FUELED_JETPACK.getStack(), ArmorItems.FUELED_JETPACK.getStack());
+        // Jetpacks
+        ModHandler.addShapelessRecipe("fueled_jetpack_nbt", ArmorItems.FUELED_JETPACK.getStack(),
+                ArmorItems.FUELED_JETPACK.getStack());
         // ClipBoard
         ModHandler.addShapelessNBTClearingRecipe("clipboard_nbt", CLIPBOARD.getStackForm(), CLIPBOARD.getStackForm());
-
     }
 
     private static void ConvertHatchToHatch() {
